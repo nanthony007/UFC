@@ -88,7 +88,7 @@ def train_model():
 
     # get averages from matches NOT the current put into two lists
     f1_predata = []
-    for i, row in f1_df.iterrows():
+    for i, _ in f1_df.iterrows():
         f1_predata.append(f1_df.drop(i).mean().tolist())
     print('F1_df done')
     f2_predata = []
@@ -157,71 +157,25 @@ def get_preds():
     f2_less = focus_only_stats(f2_df)
     f1_ewm = f1_less.ewm(alpha=0.5).mean().iloc[[-1]].values
     f2_ewm = f2_less.ewm(alpha=0.5).mean().iloc[[-1]].values
-    f1_ewm[0][3] = dateify(f1_ewm[0][3])
-    f2_ewm[0][3] = dateify(f2_ewm[0][3])
     loaded_model = deploy_model()
     subbed = np.subtract(f1_ewm, f2_ewm)
-    print(loaded_model.predict(subbed))
-#     if loaded_model.predict(subbed)[0] == 1.0:
-#         print('Predicted winner: ', f1_name)
-#     elif loaded_model.predict(subbed)[0] == 0.0:
-#         print('Predicted winner: ', f2_name)
-#     #print('Predicted result: ', loaded_model.predict(subbed)[0])
-#     #print('Chance of ', f1_name, ' winning: ', 
-#          # str(loaded_model.predict_proba(subbed)[0,1]*100) + '%')
+    print('Predicted result: ', loaded_model.predict(subbed)[0])
+    if loaded_model.predict(subbed)[0] == 1.0:
+        print('Predicted winner: ', f1_name)
+    elif loaded_model.predict(subbed)[0] == 0.0:
+        print('Predicted winner: ', f2_name)
+    print('Chance of ', f1_name, ' winning: ', 
+         str(loaded_model.predict_proba(subbed)[0,1]*100) + '%')
 
 
 #%%
 get_preds()
 
-
 #%%
-'2018-08-10' - '2018-04-12'
-
-
-#%%
-
-
-
-#%%
-df = pd.read_csv('UFCstats.csv')
-
-
-#%%
-df[df.Fighter1.startswith('Khalil')]
-
-
-#%%
-df['F1_Reach'].isna()
-
-
-#%%
-
-
-
-#%%
-count = 0
-for i, row in df.iterrows():
-    if math.isnan(row['F1_Reach']):
-        df.loc[i, 'F1_Reach'] = df.loc[i, 'F1_Height']
-        count += 1
+# count = 0
+# for i, row in df.iterrows():
+#     if math.isnan(row['F1_Reach']):
+#         df.loc[i, 'F1_Reach'] = df.loc[i, 'F1_Height']
+#         count += 1
         
-print(count)
-
-
-#%%
-len(df[df['F1_Reach'].isna()])
-
-
-#%%
-df[df['F1_Reach'].isna()]
-
-
-#%%
-df.to_csv('UFCstats.csv', index=False)
-
-
-#%%
-
-
-
+# print(count)

@@ -1,4 +1,4 @@
-#!/home/nanthony007/UFC/venv/bin/python
+#!/home/nick/PycharmProjects/UFC/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
